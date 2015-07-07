@@ -1,0 +1,12 @@
+class CreateInvalid<%= @classname_downcase %> < ActiveRecord::Migration
+  def self.up
+    create_table :invalid<%= @classname_downcase_plural %> do |t|
+      t.column :org_id, :int, :null => false
+      t.column :end_datetime, :datetime, :null => true
+    end
+  end
+
+  def self.down
+    drop_table :invalid<%= @classname_downcase_plural %>
+  end
+end

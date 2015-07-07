@@ -1,0 +1,72 @@
+require 'active_record'
+require 'yaml'
+require 'erb'
+require 'logger'
+
+require 'dbinit'
+require 'fileutils'
+
+require 'arx_base'
+
+
+def make( dest_dir_path , src_dir_path , idx , filist )
+#  %W!base invalid current!.reduce(idx) do |idy , x|
+  filist.reduce(idx) do |idy , x|
+    idy += 10
+    arx = Arx.new( File.join( src_dir_path , "#{x}.tmpl" ) )
+    content = arx.create
+    case x
+    when "base" , "noitem"
+      additional = ""
+    else
+      additional = x
+    end
+    fname = File.join( dest_dir_path , sprintf("%03d_create_%s%s.rb" , idy , additional , arx.classname_downcase) )
+    File.open( fname , 'w' , {:encoding => Encoding::UTF_8}){ |f|
+      f.puts( content )
+    }
+    idy
+  end
+end
+
+#task :default => :environment
+#task :default => :migrate
+task :default => :abc2
+#task :default => :prepare
+
+
+
+desc "abc2"
+task :abc2 do
+  puts "abc2"
+  FileUtils.rm_f( "config" )
+  FileUtils.rm_f( "db" )
+  FileUtils.mkdir_p( "config" )
+  FileUtils.mkdir_p( "db/migrate" )
+  dir = File.dirname( __FILE__ )
+  yaml_path = File.join( dir , "sqlite3.yaml")
+  tmpl_files = Dir.chdir( dir ){
+    Dir["template/*.tmpl"].map{ |x| File.absolute_path(x) }
+  }
+  FileUtils.cp( yaml_path , "config")
+  tmpl_files.each do |x|
+    FileUtils.cp( x , "db/migrate")
+  end
+
+end
+
+desc "preparete to migration"
+task :prepare => :migrate do
+#  FileUtils
+end
+
+desc "Migrate database"
+task :migrate => :environment do
+  ActiveRecord::Migrator.migrate('db/migrate' ,  ENV["VERSION"] ? ENV["VERSION"].to_i : nil )
+end
+
+SQLITE3YAML='config/sqlite3.yaml'
+#SQLITE3YAML='config/database.yml'
+task :environment do
+  Dbinit.init( SQLITE3YAML , 'db/database.log')
+end
