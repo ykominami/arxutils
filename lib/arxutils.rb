@@ -10,4 +10,5 @@ module Arxutils
     def Arxutils.rakefile
       File.join(@@dirname , 'Rakefile')
     end
+  end
 end
