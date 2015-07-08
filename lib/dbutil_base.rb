@@ -9,7 +9,7 @@ require 'pp'
 module Arxutils
   module Dbutil
     class DbMgr
-      def DbMgr.init(config_path , log_fname )
+      def DbMgr.init(config_path: 'config/sqlite3.yaml' , log_fname:  'db/database.log' )
         @@ret ||= nil
         unless @@ret
           begin

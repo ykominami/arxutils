@@ -3,6 +3,7 @@ require 'fileutils'
 require 'active_record'
 require 'arxutils'
 require 'arx_base'
+require 'dbutil_base'
 
 module Arxutils
   class Migrate
@@ -38,6 +39,7 @@ module Arxutils
     end
 
     def migrate
+      Dbutil::DbMgr.init
       ActiveRecord::Migrator.migrate(@migrate_path ,  ENV["VERSION"] ? ENV["VERSION"].to_i : nil )
     end
   end
