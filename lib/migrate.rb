@@ -1,31 +1,27 @@
 # -*- coding: utf-8 -*-
 require 'fileutils'
+require 'active_record'
 require 'arxutils'
+require 'arx_base'
 
 module Arxutils
   class Migrate
     def initialize
-      migrate_path = "db/migrate"
-      FileUtils.mkdir_p( migrate_path )
-      FileUtils.rm( Dir.glob( File.join( migrate_path , "*")))
-      src_path = Arxutils.dirname
+      @migrate_path = "db/migrate"
+      @config_path  = "config"
+      FileUtils.mkdir_p( @migrate_path )
+      FileUtils.rm( Dir.glob( File.join( @migrate_path , "*")))
+      FileUtils.mkdir_p( @config_path )
+      FileUtils.rm( Dir.glob( File.join( @config_path , "*")))
+      FileUtils.cp( Arxutils.sqlite3yaml , @config_path )
+      
+      @src_path = Arxutils.templatedir
     end
 
-    def migrate( carray , &block)
-      if block_given
-        carray.reduce(0) do |idx , x|
-          block.call(idx, x)
-        end
-      end
-      carray.reduce(0) do |idx , x|
-      end
-    end
-    
-    def make( dir_path , src_path, idx , filist )
-      #  %W!base invalid current!.reduce(idx) do |idy , x|
-      filist.reduce(idx) do |idy , x|
+    def make( next_num , data )
+      data[:flist].reduce(next_num) do |idy , x|
         idy += 10
-        arx = Arx.new( File.join( src_path , "#{x}.tmpl" ) )
+        arx = Arx.new( data , File.join( @src_path , "#{x}.tmpl" ) )
         content = arx.create
         case x
         when "base" , "noitem"
@@ -33,16 +29,16 @@ module Arxutils
         else
           additional = x
         end
-        fname = File.join( dir_path , sprintf("%03d_create_%s%s.rb" , idy , additional , arx.classname_downcase) )
+        fname = File.join( @migrate_path , sprintf("%03d_create_%s%s.rb" , idy , additional , data[:classname_downcase]) )
         File.open( fname , 'w' , {:encoding => Encoding::UTF_8}){ |f|
           f.puts( content )
         }
         idy
       end
     end
+
+    def migrate
+      ActiveRecord::Migrator.migrate(@migrate_path ,  ENV["VERSION"] ? ENV["VERSION"].to_i : nil )
+    end
   end
 end
-
-
-
-

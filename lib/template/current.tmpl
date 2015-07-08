@@ -1,17 +1,17 @@
-class CreateCurrent<%= @classname_downcase %> < ActiveRecord::Migration
+class CreateCurrent<%= @data[:classname] %> < ActiveRecord::Migration
   def self.up
     execute <<-SQL
-      CREATE VIEW current<%= @classname_downcase_plural %> AS SELECT id as org_id,
-<% @ary.each do |x| %>    
+      CREATE VIEW current<%= @data[:plural] %> AS SELECT id as org_id,
+<% @data[:ary].each do |x| %>    
       <%= x.name %>,
 <% end %>    
-      start_datetime FROM <%= @classname_downcase_plural %> where not exists (select * from invalid<%= @classname_downcase_plural %> where invalid<%= @classname_downcase_plural %>.org_id = <%= @classname_downcase_plural %>.id )
+      start_datetime FROM <%= @data[:plural] %> where not exists (select * from invalid<%= @data[:plural] %> where invalid<%= @data[:plural] %>.org_id = <%= @data[:plural] %>.id )
     SQL
   end
 
   def self.down
     execute <<-SQL
-      DROP VIEW current<%= @classname_downcase_plural %>
+      DROP VIEW current<%= @data[:plural] %>
     SQL
   end
 end

@@ -1,7 +1,7 @@
-class Create<%= @classname %> < ActiveRecord::Migration
+class Create<%= @data[:classname] %> < ActiveRecord::Migration
   def self.up
-    create_table :<%= @classname_downcase_plural %> do |t|
-<% @ary.each do |x| %>    
+    create_table :<%= @data[:plural] %> do |t|
+<% @data[:ary].each do |x| %>    
       t.column :<%= x.name %>, :<%= x.type %>, :null => <%= x.null %>
 <% end %>    
       t.column :start_datetime, :datetime, :null => false
@@ -9,6 +9,6 @@ class Create<%= @classname %> < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table :<%= @classname_downcase_plural %>
+    drop_table :<%= @data[:plural] %>
   end
 end

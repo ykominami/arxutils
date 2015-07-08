@@ -7,8 +7,16 @@ module Arxutils
       File.dirname( __FILE__ )
     end
 
+    def Arxutils.templatedir
+      File.join( Arxutils.dirname , "template" )
+    end
+
     def Arxutils.rakefile
-      File.join(@@dirname , 'Rakefile')
+      File.join( Arxutils.dirname , 'Rakefile')
+    end
+
+    def Arxutils.sqlite3yaml
+      File.join( Arxutils.dirname , 'sqlite3.yaml')
     end
   end
 end
