@@ -16,7 +16,7 @@ module Arxutils
     end
 
     def Arxutils.sqlite3yaml
-      File.join( Arxutils.dirname , 'sqlite3.yaml')
+      File.join( Arxutils.dirname , 'config' , 'sqlite3.yaml')
     end
   end
 end
