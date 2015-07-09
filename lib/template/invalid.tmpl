@@ -1,4 +1,4 @@
-class CreateInvalid<%= @data[:classname] %> < ActiveRecord::Migration
+class CreateInvalid<%= @data[:classname_downcase] %> < ActiveRecord::Migration
   def self.up
     create_table :invalid<%= @data[:plural] %> do |t|
       t.column :org_id, :int, :null => false

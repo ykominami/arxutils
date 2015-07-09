@@ -7,6 +7,13 @@ module Arxutils
     
     def initialize( data , fname )
       @fname = fname
+      # 以下のものの配列
+      # :flist
+      # :classname
+      # :classname_downcase
+      # :items
+      #  フィールド名, 型, null許容 の配列
+      # :plural
       @data = data
 
       begin

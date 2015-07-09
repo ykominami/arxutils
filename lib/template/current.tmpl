@@ -1,4 +1,4 @@
-class CreateCurrent<%= @data[:classname] %> < ActiveRecord::Migration
+class CreateCurrent<%= @data[:classname_downcase] %> < ActiveRecord::Migration
   def self.up
     execute <<-SQL
       CREATE VIEW current<%= @data[:plural] %> AS SELECT id as org_id,
