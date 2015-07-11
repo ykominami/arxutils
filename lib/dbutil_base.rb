@@ -9,11 +9,11 @@ require 'pp'
 module Arxutils
   module Dbutil
     class DbMgr
-      def DbMgr.init(config_path , log_fname )
+      def DbMgr.init( dbinit )
         @@ret ||= nil
         unless @@ret
           begin
-            Dbinit.init( config_path , log_fname )
+            dbinit.setup
             @@ret = DateTime.now.new_offset
           rescue => ex
             p ex.class

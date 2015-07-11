@@ -15,8 +15,8 @@ module Arxutils
       File.join( Arxutils.dirname , 'Rakefile')
     end
 
-    def Arxutils.sqlite3yaml
-      File.join( Arxutils.dirname , 'config' , 'sqlite3.yaml')
+    def Arxutils.configdir
+      File.join( Arxutils.dirname , 'config' )
     end
   end
 end

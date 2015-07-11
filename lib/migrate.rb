@@ -7,16 +7,9 @@ require 'dbutil_base'
 
 module Arxutils
   class Migrate
-    def initialize( forced = true )
-      @migrate_path = "db/migrate"
-      @config_path  = "config"
-      FileUtils.mkdir_p( @migrate_path )
-      FileUtils.mkdir_p( @config_path )
-      if forced
-        FileUtils.rm( Dir.glob( File.join( @migrate_path , "*")))
-        FileUtils.rm( Dir.glob( File.join( @config_path  , "*")))
-        FileUtils.cp( Arxutils.sqlite3yaml , @config_path )
-      end
+    def initialize( db_dir , migrate_dir , config_dir , dbconfig, log_fname, forced = false )
+      @dbinit = Dbinit.new( db_dir , migrate_dir , config_dir , dbconfig, log_fname, forced )
+      @migrate_path = migrate_path
       @src_path = Arxutils.templatedir
     end
 
@@ -39,8 +32,8 @@ module Arxutils
       end
     end
 
-    def migrate(config_path , log_fname )
-      Dbutil::DbMgr.init(config_path , log_fname )
+    def migrate
+      Dbutil::DbMgr.init(@dbinit)
       ActiveRecord::Migrator.migrate(@migrate_path ,  ENV["VERSION"] ? ENV["VERSION"].to_i : nil )
     end
   end
