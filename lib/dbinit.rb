@@ -6,7 +6,7 @@ module Arxutils
   MIGRATE_DIR = 'db/migrate'
   DBCONFIG = 'sqlite3.yaml'
   CONFIG_DIR = 'config'
-  DATABESELOG = 'database.log'
+  DATABASELOG = 'database.log'
   
   class Dbinit
     attr_accessor :dbconfig_dest_path
