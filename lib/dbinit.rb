@@ -21,7 +21,7 @@ module Arxutils
       @dbconfig_dest_path = File.join( @config_dir , @dbconfig )
       FileUtils.mkdir_p( @db_dir )
       FileUtils.mkdir_p( @migrate_dir )
-      FileUtils.mkdir_p( @config_path )
+      FileUtils.mkdir_p( @config_dir )
       if forced
         FileUtils.rm( Dir.glob( File.join( @migrate_dir , "*")))
         FileUtils.rm( Dir.glob( File.join( @config_dir  , "*")))
