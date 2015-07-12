@@ -9,7 +9,7 @@ module Arxutils
   class Migrate
     def initialize( db_dir , migrate_dir , config_dir , dbconfig, log_fname, forced = false )
       @dbinit = Dbinit.new( db_dir , migrate_dir , config_dir , dbconfig, log_fname, forced )
-      @migrate_path = migrate_path
+      @migrate_dir = migrate_dir
       @src_path = Arxutils.templatedir
     end
 
@@ -24,7 +24,7 @@ module Arxutils
         else
           additional = x
         end
-        fname = File.join( @migrate_path , sprintf("%03d_create_%s%s.rb" , idy , additional , data[:classname_downcase]) )
+        fname = File.join( @migrate_dir , sprintf("%03d_create_%s%s.rb" , idy , additional , data[:classname_downcase]) )
         File.open( fname , 'w' , {:encoding => Encoding::UTF_8}){ |f|
           f.puts( content )
         }
@@ -34,7 +34,7 @@ module Arxutils
 
     def migrate
       Dbutil::DbMgr.init(@dbinit)
-      ActiveRecord::Migrator.migrate(@migrate_path ,  ENV["VERSION"] ? ENV["VERSION"].to_i : nil )
+      ActiveRecord::Migrator.migrate(@migrate_dir ,  ENV["VERSION"] ? ENV["VERSION"].to_i : nil )
     end
   end
 end
