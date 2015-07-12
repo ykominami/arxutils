@@ -1,5 +1,7 @@
 #! -*- encoding : UTF-8 -*-
 require 'yaml'
+require 'active_record'
+require 'sqlite3'
 
 module Arxutils
   DB_DIR = 'db'

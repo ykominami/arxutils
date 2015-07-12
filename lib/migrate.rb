@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
-require 'fileutils'
-require 'active_record'
 require 'arxutils'
 require 'arx_base'
 require 'dbutil_base'
+require 'dbinit'
+
+require 'fileutils'
+require 'active_record'
 
 module Arxutils
   class Migrate

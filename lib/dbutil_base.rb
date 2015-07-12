@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
-require 'date'
-require 'active_record'
-require 'sqlite3'
 require 'encx/encx'
 require 'dbinit'
+
+require 'date'
 require 'pp'
 
 module Arxutils
