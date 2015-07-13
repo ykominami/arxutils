@@ -10,7 +10,7 @@ require 'active_record'
 module Arxutils
   class Migrate
     def initialize( db_dir , migrate_dir , config_dir , dbconfig, log_fname, forced = false )
-      @dbinit = Dbinit.new( db_dir , migrate_dir , config_dir , dbconfig, log_fname, forced )
+      Dbutil::DbMgr.init( db_dir , migrate_dir , config_dir , dbconfig, log_fname, forced )
       @migrate_dir = migrate_dir
       @src_path = Arxutils.templatedir
     end
