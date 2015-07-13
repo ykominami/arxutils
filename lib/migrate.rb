@@ -35,7 +35,6 @@ module Arxutils
     end
 
     def migrate
-      Dbutil::DbMgr.init(@dbinit)
       ActiveRecord::Migrator.migrate(@migrate_dir ,  ENV["VERSION"] ? ENV["VERSION"].to_i : nil )
     end
   end
