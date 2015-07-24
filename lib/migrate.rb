@@ -10,8 +10,14 @@ require 'active_record'
 module Arxutils
   class Migrate
     def Migrate.migrate( data_ary , idx , dbconfig , forced )
-      mig = Arxutils::Migrate.new(Arxutils::DB_DIR, Arxutils::MIGRATE_DIR , Arxutils::CONFIG_DIR , data_ary, idx, dbconfig , Arxutils::DATABASELOG, forced )
-
+      config_dir = Arxutils::CONFIG_DIR
+      mig = Migrate.new(Arxutils::DB_DIR, Arxutils::MIGRATE_DIR , config_dir , Arxutils::DATABASELOG, forced )
+      make_dbconfig( data_ary[idx] , dbconfig )
+      @dbconfig_dest_path = File.join( @config_dir , @dbconfig )
+        data = data_ary[idx]
+        dbconfig_src_path = File.join( Arxutils.configdir, "#{dbconfig}.yaml" )
+        FileUtils.cp( dbconfig_src_path , @dbconfig_dest_path )
+      
       data_ary.reduce(0) do |next_num , x| 
         mig.make( next_num , x )
       end
@@ -32,6 +38,10 @@ module Arxutils
     end
     def make_dbconfig( data , kind )
       convert( data , @config_path , "#{kind}.tmpl" )
+      fname = File.join( @migrate_dir , sprintf("%03d_create_%s%s.rb" , idy , additional , data[:classname_downcase]) )
+      File.open( fname , 'w' , {:encoding => Encoding::UTF_8}){ |f|
+        f.puts( content )
+      }
     end
     
     def make( next_num , data )
