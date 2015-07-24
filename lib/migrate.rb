@@ -25,7 +25,7 @@ module Arxutils
       mig.migrate
     end
     
-    def initialize( db_dir , migrate_dir , config_dir , idx, dbconfig, log_fname, forced = false )
+    def initialize( db_dir , migrate_dir , config_dir , log_fname, forced = false )
       Dbutil::DbMgr.init( db_dir , migrate_dir , config_dir , dbconfig, log_fname, forced )
       @migrate_dir = migrate_dir
       @src_path = Arxutils.templatedir
