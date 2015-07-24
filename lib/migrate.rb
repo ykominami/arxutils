@@ -20,7 +20,7 @@ module Arxutils
         mig.make( next_num , x )
       end
 
-      DbMgr.setup( mig.dbinit )
+      Dbutil::DbMgr.setup( mig.dbinit )
 
       mig.migrate
     end
