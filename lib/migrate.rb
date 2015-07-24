@@ -11,7 +11,7 @@ module Arxutils
   class Migrate
     def Migrate.migrate( data_ary , idx , dbconfig , forced )
       config_dir = Arxutils.configdir
-      mig = Migrate.new(Arxutils::DB_DIR, Arxutils::MIGRATE_DIR , config_dir , Arxutils::DATABASELOG, forced )
+      mig = Migrate.new(DB_DIR, MIGRATE_DIR , config_dir , DATABASELOG, forced )
       make_dbconfig( data_ary[idx] , dbconfig )
       @dbconfig_dest_path = File.join( @config_dir , @dbconfig )
         data = data_ary[idx]
