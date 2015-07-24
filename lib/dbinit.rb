@@ -14,19 +14,20 @@ module Arxutils
   class Dbinit
     attr_accessor :dbconfig_dest_path , :dbconfig_src_path , :dbconfig_src_fname , :dbconfig_dest_fname
     
-    def initialize( db_dir , migrate_dir , config_dir , dbconfig , log_fname, forced = false )
+    def initialize( db_dir , migrate_dir , src_config_dir , dbconfig , log_fname, forced = false )
       @db_dir = db_dir
       @migrate_dir = migrate_dir
-      @config_dir  = config_dir
+      @src_config_dir  = src_config_dir
+      @dest_config_dir  = "config"
       @dbconfig_dest_fname = "#{dbconfig}.yaml"
       @dbconfig_src_fname = "#{dbconfig}.tmpl"
       @dbconfig_dest_path = File.join( "config" , @dbconfig_dest_fname)
-      @dbconfig_src_path = File.join(@config_dir  , @dbconfig_src_fname)
+      @dbconfig_src_path = File.join(@src_config_dir  , @dbconfig_src_fname)
       @log_fname = log_fname
       @log_path = File.join( @db_dir , @log_fname )
       FileUtils.mkdir_p( @db_dir )
       FileUtils.mkdir_p( @migrate_dir )
-      FileUtils.mkdir_p( @config_dir )
+      FileUtils.mkdir_p( @dest_config_dir )
       if forced
         FileUtils.rm( Dir.glob( File.join( @migrate_dir , "*")))
         FileUtils.rm( Dir.glob( File.join( @config_dir  , "*")))
