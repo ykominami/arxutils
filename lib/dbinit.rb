@@ -20,7 +20,7 @@ module Arxutils
       @config_dir  = config_dir
       @dbconfig_dest_fname = "#{dbconfig}.yaml"
       @dbconfig_src_fname = "#{dbconfig}.tmpl"
-      @dbconfig_dest_path = File.join(@config_dir , @dbconfig_dest_fname)
+      @dbconfig_dest_path = File.join( "config" , @dbconfig_dest_fname)
       @dbconfig_src_path = File.join(@config_dir  , @dbconfig_src_fname)
       @log_fname = log_fname
       @log_path = File.join( @db_dir , @log_fname )
