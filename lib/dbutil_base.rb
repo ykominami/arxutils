@@ -27,11 +27,12 @@ module Arxutils
       def DbMgr.init( db_dir , migrate_dir , config_dir, log_fname , forced = false )
         dbinit = Dbinit.new( db_dir , migrate_dir , config_dir,  log_fname , forced )
         DbMgr.setup( dbinit )
+        dbinit
       end
       
       def DbMgr.conv_string(value , encoding)
         if value.class == String
-          if value.encoding != encoding
+          if value.encodingy != encoding
             value.encode(encoding)
           else
             value

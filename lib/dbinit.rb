@@ -12,13 +12,16 @@ module Arxutils
   DATABASELOG = 'database.log'
   
   class Dbinit
-    attr_accessor :dbconfig_dest_path
+    attr_accessor :dbconfig_dest_path , :dbconfig_src_path , :dbconfig_src_fname , :dbconfig_dest_fname
     
-    def initialize( db_dir , migrate_dir , config_dir , log_fname, forced = false )
+    def initialize( db_dir , migrate_dir , config_dir , dbconfig, log_fname, forced = false )
       @db_dir = db_dir
       @migrate_dir = migrate_dir
       @config_dir  = config_dir
-      @dbconfig_dest_path = @config_dir
+      @dbconfig_dest_fname = "#{dbconfig}.yaml"
+      @dbconfig_src_fname = "#{dbconfig}.tmpl"
+      @dbconfig_dest_path = File.join(@config_dir , @dbconfig_dest_fname)
+      @dbconfig_src_path = File.join(@config_dir  , @dbconfig_src_fname)
       @log_fname = log_fname
       @log_path = File.join( @db_dir , @log_fname )
       FileUtils.mkdir_p( @db_dir )

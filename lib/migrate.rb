@@ -9,9 +9,11 @@ require 'active_record'
 
 module Arxutils
   class Migrate
+    attr_accessor :dbconfig_dest_path
+    
     def Migrate.migrate( data_ary , idx , dbconfig , forced )
       config_dir = Arxutils.configdir
-      mig = Migrate.new(DB_DIR, MIGRATE_DIR , config_dir , DATABASELOG, forced )
+      mig = Migrate.new(DB_DIR, MIGRATE_DIR , config_dir , dbconfig, DATABASELOG, forced )
       make_dbconfig( data_ary[idx] , dbconfig )
       
       data_ary.reduce(0) do |next_num , x| 
@@ -22,20 +24,24 @@ module Arxutils
     end
     
     def initialize( db_dir , migrate_dir , config_dir , log_fname, forced = false )
-      Dbutil::DbMgr.init( db_dir , migrate_dir , config_dir , log_fname, forced )
+      dbinit = Dbutil::DbMgr.init( db_dir , migrate_dir , config_dir , log_fname, forced )
+      @dbconfig_dest_path = dbinit.dbconfig_dest_path
+      @dbconfig_src_path = dbinit.dbconfig_src_path
+      @dbconfig_src_fname = dbinit.dbconfig_src_fname
+
       @migrate_dir = migrate_dir
       @src_path = Arxutils.templatedir
       @config_path = Arxutils.configdir
     end
 
     def convert( data , src_dir , src_fname )
-      arx = Arx.new( data , File.join( @config_path , "mysql.tmpl" ) )
+      arx = Arx.new( data , File.join( src_dir, src_fname ) )
       arx.create
     end
+    
     def make_dbconfig( data , kind )
-      convert( data , @config_path , "#{kind}.tmpl" )
-      fname = File.join( @migrate_dir , sprintf("%03d_create_%s%s.rb" , idy , additional , data[:classname_downcase]) )
-      File.open( fname , 'w' , {:encoding => Encoding::UTF_8}){ |f|
+      content = convert( data , @config_path , @dbconfig_src_fname )
+      File.open( @dbconfig_dest_path , 'w' , {:encoding => Encoding::UTF_8}){ |f|
         f.puts( content )
       }
     end
