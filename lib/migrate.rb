@@ -13,7 +13,7 @@ module Arxutils
     
     def Migrate.migrate( data_ary , idx , dbconfig , forced )
       config_dir = Arxutils.configdir
-      mig = Migrate.new(DB_DIR, MIGRATE_DIR , config_dir , DATABASELOG, forced )
+      mig = Migrate.new(DB_DIR, MIGRATE_DIR , config_dir , dbconfig, DATABASELOG, forced )
       make_dbconfig( data_ary[idx] , dbconfig )
       
       data_ary.reduce(0) do |next_num , x| 
@@ -23,8 +23,8 @@ module Arxutils
       mig.migrate
     end
     
-    def initialize( db_dir , migrate_dir , config_dir , log_fname, forced = false )
-      dbinit = Dbutil::DbMgr.init( db_dir , migrate_dir , config_dir , log_fname, forced )
+    def initialize( db_dir , migrate_dir , config_dir , dbcongig, log_fname, forced = false )
+      dbinit = Dbutil::DbMgr.init( db_dir , migrate_dir , config_dir , dbconfig, log_fname, forced )
       @dbconfig_dest_path = dbinit.dbconfig_dest_path
       @dbconfig_src_path = dbinit.dbconfig_src_path
       @dbconfig_src_fname = dbinit.dbconfig_src_fname

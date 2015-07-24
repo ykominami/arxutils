@@ -14,7 +14,7 @@ module Arxutils
   class Dbinit
     attr_accessor :dbconfig_dest_path , :dbconfig_src_path , :dbconfig_src_fname , :dbconfig_dest_fname
     
-    def initialize( db_dir , migrate_dir , config_dir , log_fname, forced = false )
+    def initialize( db_dir , migrate_dir , config_dir , dbconfig , log_fname, forced = false )
       @db_dir = db_dir
       @migrate_dir = migrate_dir
       @config_dir  = config_dir
