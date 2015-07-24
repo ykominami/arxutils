@@ -6,7 +6,8 @@ require 'sqlite3'
 module Arxutils
   DB_DIR = 'db'
   MIGRATE_DIR = 'db/migrate'
-  DBCONFIG = 'sqlite3.yaml'
+  DBCONFIG_SQLITE3 = 'sqlite3.yaml'
+  DBCONFIG_MYSQL = 'mysql.yaml'
   CONFIG_DIR = 'config'
   DATABASELOG = 'database.log'
   
