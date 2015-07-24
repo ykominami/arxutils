@@ -9,12 +9,12 @@ require 'active_record'
 
 module Arxutils
   class Migrate
-    attr_accessor :dbconfig_dest_path
+    attr_accessor :dbconfig_dest_path , :dbconfig_dest_fname , :dbconfig_src_path , :dbconfig_src_fname
     
     def Migrate.migrate( data_ary , idx , dbconfig , forced )
-      config_dir = Arxutils.configdir
-      mig = Migrate.new(DB_DIR, MIGRATE_DIR , config_dir , dbconfig, DATABASELOG, forced )
-      make_dbconfig( data_ary[idx] , dbconfig )
+      src_config_dir = Arxutils.configdir
+      mig = Migrate.new(DB_DIR, MIGRATE_DIR , src_config_dir , dbconfig, DATABASELOG, forced )
+      mig.make_dbconfig( data_ary[idx] )
       
       data_ary.reduce(0) do |next_num , x| 
         mig.make( next_num , x )
@@ -31,7 +31,7 @@ module Arxutils
 
       @migrate_dir = migrate_dir
       @src_path = Arxutils.templatedir
-      @config_path = Arxutils.configdir
+      @src_config_path = Arxutils.configdir
     end
 
     def convert( data , src_dir , src_fname )
@@ -39,8 +39,8 @@ module Arxutils
       arx.create
     end
     
-    def make_dbconfig( data , kind )
-      content = convert( data , @config_path , @dbconfig_src_fname )
+    def make_dbconfig( data )
+      content = convert( data , @src_config_path , @dbconfig_src_fname )
       File.open( @dbconfig_dest_path , 'w' , {:encoding => Encoding::UTF_8}){ |f|
         f.puts( content )
       }
