@@ -13,7 +13,7 @@ module Arxutils
     
     def Migrate.migrate( data_ary , idx , dbconfig , forced )
       config_dir = Arxutils.configdir
-      mig = Migrate.new(DB_DIR, MIGRATE_DIR , config_dir , dbconfig, DATABASELOG, forced )
+      mig = Migrate.new(DB_DIR, MIGRATE_DIR , config_dir , DATABASELOG, forced )
       make_dbconfig( data_ary[idx] , dbconfig )
       
       data_ary.reduce(0) do |next_num , x| 
