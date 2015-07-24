@@ -30,7 +30,7 @@ module Arxutils
       FileUtils.mkdir_p( @dest_config_dir )
       if forced
         FileUtils.rm( Dir.glob( File.join( @migrate_dir , "*")))
-        FileUtils.rm( Dir.glob( File.join( @config_dir  , "*")))
+        FileUtils.rm( Dir.glob( File.join( @dest_config_dir  , "*")))
       end
     end
     
