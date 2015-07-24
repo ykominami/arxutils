@@ -18,6 +18,7 @@ module Arxutils
       @db_dir = db_dir
       @migrate_dir = migrate_dir
       @config_dir  = config_dir
+      @dbconfig_dest_path = @config_dir
       @log_fname = log_fname
       @log_path = File.join( @db_dir , @log_fname )
       FileUtils.mkdir_p( @db_dir )
