@@ -10,12 +10,12 @@ require 'active_record'
 module Arxutils
   class Migrate
     def Migrate.migrate( data_ary , idx , dbconfig , forced )
-      config_dir = Arxutils::CONFIG_DIR
+      config_dir = Arxutils.configdir
       mig = Migrate.new(Arxutils::DB_DIR, Arxutils::MIGRATE_DIR , config_dir , Arxutils::DATABASELOG, forced )
       make_dbconfig( data_ary[idx] , dbconfig )
       @dbconfig_dest_path = File.join( @config_dir , @dbconfig )
         data = data_ary[idx]
-        dbconfig_src_path = File.join( Arxutils.configdir, "#{dbconfig}.yaml" )
+        dbconfig_src_path = File.join( config_dir, "#{dbconfig}.yaml" )
         FileUtils.cp( dbconfig_src_path , @dbconfig_dest_path )
       
       data_ary.reduce(0) do |next_num , x| 
