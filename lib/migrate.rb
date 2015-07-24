@@ -9,7 +9,7 @@ require 'active_record'
 
 module Arxutils
   class Migrate
-    attr_accessor :dbconfig_dest_path , :dbconfig_dest_fname , :dbconfig_src_path , :dbconfig_src_fname
+    attr_accessor :dbinit , :dbconfig_dest_path , :dbconfig_dest_fname , :dbconfig_src_path , :dbconfig_src_fname
     
     def Migrate.migrate( data_ary , idx , dbconfig , forced )
       src_config_dir = Arxutils.configdir
@@ -20,14 +20,16 @@ module Arxutils
         mig.make( next_num , x )
       end
 
+      DbMgr.setup( mig.dbinit )
+
       mig.migrate
     end
     
     def initialize( db_dir , migrate_dir , config_dir , dbconfig, log_fname, forced = false )
-      dbinit = Dbutil::DbMgr.init( db_dir , migrate_dir , config_dir , dbconfig, log_fname, forced )
-      @dbconfig_dest_path = dbinit.dbconfig_dest_path
-      @dbconfig_src_path = dbinit.dbconfig_src_path
-      @dbconfig_src_fname = dbinit.dbconfig_src_fname
+      @dbinit = Dbutil::Dbinit.new( db_dir , migrate_dir , config_dir , dbconfig, log_fname, forced )
+      @dbconfig_dest_path = @dbinit.dbconfig_dest_path
+      @dbconfig_src_path = @dbinit.dbconfig_src_path
+      @dbconfig_src_fname = @dbinit.dbconfig_src_fname
 
       @migrate_dir = migrate_dir
       @src_path = Arxutils.templatedir
