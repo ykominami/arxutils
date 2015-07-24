@@ -23,7 +23,7 @@ module Arxutils
       mig.migrate
     end
     
-    def initialize( db_dir , migrate_dir , config_dir , dbcongig, log_fname, forced = false )
+    def initialize( db_dir , migrate_dir , config_dir , dbconfig, log_fname, forced = false )
       dbinit = Dbutil::DbMgr.init( db_dir , migrate_dir , config_dir , dbconfig, log_fname, forced )
       @dbconfig_dest_path = dbinit.dbconfig_dest_path
       @dbconfig_src_path = dbinit.dbconfig_src_path
