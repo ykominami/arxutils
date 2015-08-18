@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 require 'arxutils'
-require 'arx_base'
-require 'dbutil_base'
-require 'dbinit'
+require 'arxutils/arx'
+require 'arxutils/dbutil/dbmgr'
+require 'arxutils/dbutil/dbinit'
 
 require 'fileutils'
 require 'active_record'
@@ -13,20 +13,20 @@ module Arxutils
     
     def Migrate.migrate( data_ary , idx , dbconfig , forced )
       src_config_dir = Arxutils.configdir
-      mig = Migrate.new(DB_DIR, MIGRATE_DIR , src_config_dir , dbconfig, DATABASELOG, forced )
+      mig = Migrate.new(Dbutil::DB_DIR, Arxutils::Dbutil::MIGRATE_DIR , src_config_dir , dbconfig, Arxutils::Dbutil::DATABASELOG, forced )
       mig.make_dbconfig( data_ary[idx] )
       
       data_ary.reduce(0) do |next_num , x| 
         mig.make( next_num , x )
       end
 
-      Dbutil::DbMgr.setup( mig.dbinit )
+      Arxutils::Dbutil::DbMgr.setup( mig.dbinit )
 
       mig.migrate
     end
     
     def initialize( db_dir , migrate_dir , config_dir , dbconfig, log_fname, forced = false )
-      @dbinit = Dbinit.new( db_dir , migrate_dir , config_dir , dbconfig, log_fname, forced )
+      @dbinit = Dbutil::Dbinit.new( db_dir , migrate_dir , config_dir , dbconfig, log_fname, forced )
       @dbconfig_dest_path = @dbinit.dbconfig_dest_path
       @dbconfig_src_path = @dbinit.dbconfig_src_path
       @dbconfig_src_fname = @dbinit.dbconfig_src_fname

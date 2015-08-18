@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Arxutils do
+describe Arx do
   it 'has a version number' do
     expect(Arxutils::VERSION).not_to be nil
   end

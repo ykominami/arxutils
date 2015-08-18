@@ -3,7 +3,6 @@ require 'erb'
 
 module Arxutils
   class Arx
-
     def initialize( data , fname )
       @fname = fname
       # 以下のものの配列
@@ -28,5 +27,3 @@ module Arxutils
     end
   end
 end
-
-

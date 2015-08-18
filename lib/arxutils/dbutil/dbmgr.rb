@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-require 'encx/encx'
-require 'dbinit'
+require 'arxutils/dbutil/dbinit'
 
 require 'date'
 require 'pp'
@@ -20,8 +19,8 @@ module Arxutils
             dbinit.setup
             @@ret = DateTime.now.new_offset
           rescue => ex
-            p ex.class
-            p ex.message
+            pp ex.class
+            pp ex.message
             pp ex.backtrace
           end
         end
