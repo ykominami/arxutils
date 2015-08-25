@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 require 'arxutils'
-require 'arxutils/arx'
-require 'arxutils/dbutil/dbmgr'
-require 'arxutils/dbutil/dbinit'
 
 require 'fileutils'
 require 'active_record'
@@ -13,14 +10,14 @@ module Arxutils
     
     def Migrate.migrate( data_ary , idx , dbconfig , forced )
       src_config_dir = Arxutils.configdir
-      mig = Migrate.new(Dbutil::DB_DIR, Arxutils::Dbutil::MIGRATE_DIR , src_config_dir , dbconfig, Arxutils::Dbutil::DATABASELOG, forced )
+      mig = Migrate.new(Dbutil::DB_DIR, Dbutil::MIGRATE_DIR , src_config_dir , dbconfig, Dbutil::DATABASELOG, forced )
       mig.make_dbconfig( data_ary[idx] )
       
       data_ary.reduce(0) do |next_num , x| 
         mig.make( next_num , x )
       end
 
-      Arxutils::Dbutil::DbMgr.setup( mig.dbinit )
+      Dbutil::DbMgr.setup( mig.dbinit )
 
       mig.migrate
     end
@@ -59,6 +56,7 @@ module Arxutils
           additional = x
         end
         fname = File.join( @migrate_dir , sprintf("%03d_create_%s%s.rb" , idy , additional , data[:classname_downcase]) )
+        p fname
         File.open( fname , 'w' , {:encoding => Encoding::UTF_8}){ |f|
           f.puts( content )
         }
