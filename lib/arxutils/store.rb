@@ -11,7 +11,7 @@ module Arxutils
       when :db
         obj = StoreDb.init( hs , block )
       when :csv
-        obj = StoreCsv.new( hs , block )
+        obj = StoreCsv.new( hs )
       else
         obj = nil
       end
