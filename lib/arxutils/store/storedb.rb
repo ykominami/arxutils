@@ -5,11 +5,13 @@ module Arxutils
   class Store
     class StoreDb
       def initialize( hs , &block )
-        register_time = Arxutils::Dbutil::DbMgr.init( hs["db_dir"] , hs["migrate_dir"] , hs["config_dir"], hs["dbconfig"] , hs["log_fname"] )
+        ret = nil
+        register_time = Dbutil::DbMgr.init( hs["db_dir"] , hs["migrate_dir"] , hs["config_dir"], hs["dbconfig"] , hs["log_fname"] )
 
         if block_given?
-          @dbmgr = block.call( register_time )
+          ret = block.call( register_time )
         end
+        ret
       end
       # hs
       # :csv_fname
