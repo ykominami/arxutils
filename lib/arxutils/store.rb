@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-require 'arxutils/store/sotredb'
-require 'arxutils/store/sotrecsv'
+require 'arxutils/store/storedb'
+require 'arxutils/store/storecsv'
 
 module Arxutils
   class Store
