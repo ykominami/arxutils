@@ -4,6 +4,8 @@ require 'arxutils/arx'
 require 'arxutils/dbutil/dbinit'
 require 'arxutils/dbutil/dbmgr'
 require 'arxutils/store'
+require 'arxutils/store/storedb'
+require 'arxutils/store/storecsv'
 require 'arxutils/migrate'
 
 
