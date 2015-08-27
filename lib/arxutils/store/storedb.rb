@@ -4,7 +4,7 @@ require 'arxutils'
 module Arxutils
   class Store
     class StoreDb
-      def initialize( hs , &block )
+      def StoreDb.init( hs , &block )
         ret = nil
         register_time = Dbutil::DbMgr.init( hs["db_dir"] , hs["migrate_dir"] , hs["config_dir"], hs["dbconfig"] , hs["log_fname"] )
 

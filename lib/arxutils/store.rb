@@ -6,12 +6,12 @@ module Arxutils
   class Store
     extend Forwardable
 
-    def initialize( kind , hs )
+    def Store.init( kind , hs , &block )
       case kind
       when :db
-        obj = StoreDb.new( hs )
-      when :CSV
-        obj = StoreCsv.new( hs )
+        obj = StoreDb.init( hs , block )
+      when :csv
+        obj = StoreCsv.new( hs , block )
       else
         obj = nil
       end
