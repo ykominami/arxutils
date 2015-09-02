@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 require 'arxutils'
-require 'dbutil/dgmgr'
+require 'dbutil/dbmgr'
 
 module Arxutils
   class Store
