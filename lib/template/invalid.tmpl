@@ -2,7 +2,7 @@ class CreateInvalid<%= @data[:classname_downcase] %> < ActiveRecord::Migration
   def self.up
     create_table :invalid<%= @data[:plural] %> do |t|
       t.column :org_id, :int, :null => false
-      t.column :end_datetime, :datetime, :null => true
+      t.column :end_count_id, :int, :null => true
     end
   end
 

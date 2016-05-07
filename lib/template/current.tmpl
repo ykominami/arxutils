@@ -2,10 +2,8 @@ class CreateCurrent<%= @data[:classname_downcase] %> < ActiveRecord::Migration
   def self.up
     execute <<-SQL
       CREATE VIEW current<%= @data[:plural] %> AS SELECT id as org_id,
-<% @data[:ary].each do |x| %>    
-      <%= x.name %>,
-<% end %>    
-      start_datetime FROM <%= @data[:plural] %> where not exists (select * from invalid<%= @data[:plural] %> where invalid<%= @data[:plural] %>.org_id = <%= @data[:plural] %>.id )
+<%= @data[:ary].map{|x| x.name }.join(" , ") %>    
+      FROM <%= @data[:plural] %> where not exists (select * from invalid<%= @data[:plural] %> where invalid<%= @data[:plural] %>.org_id = <%= @data[:plural] %>.id )
     SQL
   end
 
