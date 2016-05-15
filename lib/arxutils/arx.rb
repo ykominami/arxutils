@@ -25,5 +25,17 @@ module Arxutils
       erb = ERB.new(contents)
       erb.result(binding)
     end
+
+    def update_integer( model , hs )
+      value_hs = hs.reduce({}){ |hsx,item|
+        val = model.send(item[0])
+        if val != nil and item[1] != nil and val  < item[1]
+          hsx[ item[0] ] = item[1]
+        end
+        hsx
+      }
+      model.update(value_hs) if value_hs.size > 0
+    end
+
   end
 end
