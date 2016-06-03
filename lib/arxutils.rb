@@ -1,6 +1,7 @@
 require 'arxutils/version'
 require 'arxutils/arxutils'
 require 'arxutils/arx'
+require 'arxutils/transactstate'
 require 'arxutils/dbutil/dbinit'
 require 'arxutils/dbutil/dbmgr'
 require 'arxutils/store'
