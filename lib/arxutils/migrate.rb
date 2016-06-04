@@ -17,7 +17,7 @@ module Arxutils
         mig.make( next_num , x )
       end
 
-      Dbutil::DbMgr.setup( mig.dbinit )
+#      Dbutil::DbMgr.setup( mig.dbinit )
 
       mig.migrate
     end
@@ -43,6 +43,9 @@ module Arxutils
       File.open( @dbconfig_dest_path , 'w' , {:encoding => Encoding::UTF_8}){ |f|
         f.puts( content )
       }
+    end
+
+    def make_relation( data )
     end
     
     def make( next_num , data )

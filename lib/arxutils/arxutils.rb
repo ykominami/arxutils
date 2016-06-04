@@ -10,10 +10,6 @@ module Arxutils
       File.join(  Arxutils.dirname , ".." , "template" )
     end
 
-    def Arxutils.rakefile
-      File.join( Arxutils.dirname , ".." , 'Rakefile')
-    end
-
     def Arxutils.configdir
       File.join( Arxutils.dirname  , ".." , 'config' )
     end

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+=begin
 require 'arxutils/dbutil/dbinit'
 
 require 'date'
@@ -27,7 +28,6 @@ module Arxutils
 
         @@ret
       end
-
       def DbMgr.conv_string(value , encoding)
         if value.class == String
           if value.encodingy != encoding
@@ -67,3 +67,4 @@ module Arxutils
     end
   end
 end
+=end
