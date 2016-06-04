@@ -4,7 +4,6 @@ class Create<%= @data[:classname] %> < ActiveRecord::Migration
 <% @data[:ary].each do |x| %>    
       t.column :<%= x.name %>, :<%= x.type %>, :null => <%= x.null %>
 <% end %>    
-      t.timestamp
     end
   end
 

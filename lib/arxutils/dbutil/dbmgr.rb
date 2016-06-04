@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-=begin
+
 require 'arxutils/dbutil/dbinit'
 
 require 'date'
@@ -67,4 +67,4 @@ module Arxutils
     end
   end
 end
-=end
+

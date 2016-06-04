@@ -27,8 +27,9 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
+  spec.add_runtime_dependency "activesupport"
 #  spec.add_runtime_dependency "erb"
-  spec.add_runtime_dependency "activerecord"
+  spec.add_runtime_dependency "activerecord" , "4.2.5"
   spec.add_runtime_dependency "sqlite3"
   spec.add_runtime_dependency "encx"
 
