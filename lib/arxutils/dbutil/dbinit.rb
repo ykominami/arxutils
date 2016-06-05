@@ -37,7 +37,9 @@ module Arxutils
       end
       
       def setup
+        puts ENV['ENV']
         dbconfig = YAML.load( File.read( @dbconfig_dest_path ) )
+        puts dbconfig[ ENV['ENV'] ]
         ActiveRecord::Base.establish_connection(dbconfig[ENV['ENV']])
         ActiveRecord::Base.logger = Logger.new( @log_path )
       end

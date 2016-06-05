@@ -1,0 +1,3 @@
+  class <%= @data[:classname] %> < ActiveRecord::Base
+<% @data[:relation].each do |x| %>    <%= x %>
+<% end %>  end

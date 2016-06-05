@@ -2,10 +2,11 @@
 
 module Arxutils
   class HierOp
-    def initialize( hier_symbol , base_klass , hier_klass )
+    def initialize( hier_symbol , base_klass , hier_klass , current_klass )
       @hier_symbol = hier_symbol
       @base_klass = base_klass
       @hier_klass = hier_klass
+      @current_klass = current_klass
     end
     
     def delete( hier )
@@ -54,7 +55,7 @@ module Arxutils
       hier_ary.pop
       parent_hier_ary = hier_ary
       parent_hier = parent_hier_ary.join('/')
-      parent_num = register_categoryhier( parent_hier )
+      parent_num = register( parent_hier )
       hs = { parent_id: parent_num , child_id: child_num , level: level }
       @hier_klass.create( hs )
     end
@@ -65,7 +66,7 @@ module Arxutils
 
       # もしhier_aryがnilだけを1個持つ配列、または空文字列だけを1個もつ配列であれば、hier_nameは空文字列になる
 
-      item_row = @base_klass.find_by( name: hier )
+      item_row = @current_klass.find_by( name: hier )
       unless item_row
         new_category = @base_klass.create( name: hier )
         new_num = new_category.id

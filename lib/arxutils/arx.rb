@@ -12,18 +12,23 @@ module Arxutils
       # :items
       #  フィールド名, 型, null許容 の配列
       # :plural
+      # :relation
       @data = data
 
       @@field ||= Struct.new("Field" , :name, :type, :null ) 
 
-      @data[:ary] = @data[:items].map{ |x| @@field.new( *x ) }
+      if @data[:items]
+        @data[:ary] = @data[:items].map{ |x| @@field.new( *x ) }
+      else
+        @data[:ary] = []
+      end
     end
 
     def create
       contents = File.open( @fname ).read
-
       erb = ERB.new(contents)
-      erb.result(binding)
+      content = erb.result(binding)
+      content
     end
 
   end
