@@ -14,22 +14,22 @@ module Arxutils
       end
     }
   end
-      
-      def update_integer( model , hs )
-        value_hs = hs.reduce({}){ |hsx,item|
-          val = model.send(item[0])
-          if val == nil or val  < item[1]
-            hsx[ item[0] ] = item[1]
-          end
-          hsx
-        }
-        if value_hs.size > 0
-          begin
-            model.update(value_hs)
-          rescue => ex
-            puts ex.message
-          end
-        end
+
+  def update_integer( model , hs )
+    value_hs = hs.reduce({}){ |hsx,item|
+      val = model.send(item[0])
+      if val == nil or val  < item[1]
+        hsx[ item[0] ] = item[1]
       end
+      hsx
+    }
+    if value_hs.size > 0
+      begin
+        model.update(value_hs)
+      rescue => ex
+        puts ex.message
+      end
+    end
+  end
 
 end

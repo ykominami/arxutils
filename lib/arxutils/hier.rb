@@ -11,8 +11,13 @@ module Arxutils
     
     def delete( hier )
       # 子として探す
+      id = nil
       row_item  = @base_klass.find_by( { @hier_symbol => hier } )
-      delete_at( row_item.id )
+      if row_item
+        id = row_item.id
+        delete_at( id )
+      end
+      id
     end
 
     def move( src_hier , dest_parent_hier )
@@ -66,13 +71,16 @@ module Arxutils
 
       # もしhier_aryがnilだけを1個持つ配列、または空文字列だけを1個もつ配列であれば、hier_nameは空文字列になる
 
-      item_row = @current_klass.find_by( name: hier )
+      item_row = @current_klass.find_by( {@hier_symbol => hier} )
       unless item_row
-        new_category = @base_klass.create( name: hier )
+        # @base_klassがhierだけでcreateできる場合は（他にフィールドがnot_nullでないか）、ここに来てもよい。
+        # そうでなければ、SQLの制約違反が発生するため、ここに来ることを避けなければならない。
+        # （あらかじめここが呼ばれないようにdatabaseに登録済みにしておかなければならない。）
+        new_category = @base_klass.create( {@hier_symbol => hier} )
         new_num = new_category.id
         if level == 0
           unless @hier_klass.find_by( child_id: new_num )
-            hs = {parent_id: new_num , child_id: new_num , level: level}
+            hs = { parent_id: new_num , child_id: new_num , level: level }
             @hier_klass.create( hs )
           end
         else
