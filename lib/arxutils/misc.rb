@@ -32,4 +32,13 @@ module Arxutils
     end
   end
 
+  def capture_queries(&block)
+    queries = []
+    ActiveSupport::Notifications.subscribe('sql.active_record') do |_name, _start, _finish, _id, payload|
+      queries << payload
+    end
+    yield block
+    ActiveSupport::Notifications.unsubscribe('sql.active_record')
+    queries
+  end
 end

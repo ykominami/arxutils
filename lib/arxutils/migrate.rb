@@ -12,9 +12,9 @@ module Arxutils
     
     def Migrate.migrate( data_ary , relation_def_fpath , module_name, count_classname_downcase , count_field , dbconfig , forced )
       src_config_dir = Arxutils.configdir
-      mig = Migrate.new( Dbutil::DB_DIR, Dbutil::MIGRATE_DIR , src_config_dir , dbconfig, Dbutil::DATABASELOG, forced )
+      mig = Migrate.new( Dbutil::MIGRATE_DIR , src_config_dir , dbconfig, Dbutil::DATABASELOG, forced )
       # dbconfigのテンプレートは内容が固定である。convertを呼び出し、Arxのインスタンスを作成するときに、適切なdata_aryの要素を与える必要がある（ただしテンプレートへの埋め込みには用いられない
-      mig.make_dbconfig( data_ary[0] )
+      mig.make_dbconfig( dbconfig )
       
       data_ary.reduce(0) { |next_num , x| 
         mig.make( next_num , x )
@@ -51,13 +51,13 @@ module Arxutils
       mig.migrate
     end
     
-    def initialize( db_dir , migrate_dir , config_dir , dbconfig, log_fname, forced = false )
-      @dbinit = Dbutil::Dbinit.new( db_dir , migrate_dir , config_dir , dbconfig, log_fname, forced )
+    def initialize( migrate_base_dir , config_dir , dbconfig, log_fname, forced = false )
+      @dbinit = Dbutil::Dbinit.new( migrate_base_dir , config_dir , dbconfig, log_fname, forced )
       @dbconfig_dest_path = @dbinit.dbconfig_dest_path
       @dbconfig_src_path = @dbinit.dbconfig_src_path
       @dbconfig_src_fname = @dbinit.dbconfig_src_fname
 
-      @migrate_dir = migrate_dir
+      @migrate_dir = @dbinit.migrate_dir
       @src_path = Arxutils.templatedir
       @src_config_path = Arxutils.configdir
     end

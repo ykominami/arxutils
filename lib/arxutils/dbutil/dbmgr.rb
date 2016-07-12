@@ -8,8 +8,8 @@ require 'pp'
 module Arxutils
   module Dbutil
     class DbMgr
-      def DbMgr.init( db_dir , migrate_dir , config_dir , dbconfig, log_fname, forced = false )
-        dbinit = Dbinit.new( db_dir , migrate_dir , config_dir , dbconfig, log_fname, forced )
+      def DbMgr.init( migrate_dir , config_dir , dbconfig, log_fname, forced = false )
+        dbinit = Dbinit.new( migrate_dir , config_dir , dbconfig, log_fname, forced )
         DbMgr.setup( dbinit )
       end
       

@@ -163,7 +163,7 @@ module Arxutils
     # 指定項目と、その子のlevelを調整
     def level_adjust( row , parent_level )
       row.level = parent_level + 1
-      child_rows = @hier_klass.where( paernt_id: row.id )
+      child_rows = @hier_klass.where( parent_id: row.id )
       if child_rows.size > 0
         child_rows.map{ |x| level_adjust( x , row.level ) }
       end
