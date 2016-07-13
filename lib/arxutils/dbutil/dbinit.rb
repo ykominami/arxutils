@@ -19,7 +19,7 @@ module Arxutils
       def initialize( migrate_base_dir , src_config_dir , dbconfig , log_fname, forced = false )
         @db_dir = dbconfig[:db_dir]
         @src_config_dir  = src_config_dir
-        @dest_config_dir  = "config"
+        @dest_config_dir  = dbconfig[:config_dir]
         @dbconfig_dest_fname = "#{dbconfig[:kind]}.yaml"
         @dbconfig_src_fname = "#{dbconfig[:kind]}.tmpl"
         @dbconfig_dest_path = File.join( @dest_config_dir , @dbconfig_dest_fname)
