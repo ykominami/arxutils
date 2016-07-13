@@ -10,7 +10,7 @@ module Arxutils
   class Migrate
     attr_accessor :dbinit , :dbconfig_dest_path , :dbconfig_dest_fname , :dbconfig_src_path , :dbconfig_src_fname
     
-    def Migrate.migrate( data_ary , relation_def_fpath , module_name, count_classname_downcase , count_field , dbconfig , forced )
+    def Migrate.migrate( data_ary , relation_def_fpath , module_name, count_classname_downcase , dbconfig , forced )
       src_config_dir = Arxutils.configdir
       mig = Migrate.new( Dbutil::MIGRATE_DIR , src_config_dir , dbconfig, Dbutil::DATABASELOG, forced )
       # dbconfigのテンプレートは内容が固定である。convertを呼び出し、Arxのインスタンスを作成するときに、適切なdata_aryの要素を与える必要がある（ただしテンプレートへの埋め込みには用いられない
@@ -21,7 +21,7 @@ module Arxutils
       }
 
       content_array = data_ary.map { |x| 
-        mig.make_relation( x , "count", "end_count_id" )
+        mig.make_relation( x , "count" )
       }.select{ |x| x.size > 0 }
       need_count_class_plural = content_array.reduce([]){ |s,x|
         s << x[:need_count_class_plural] if x[:need_count_class_plural] != nil
@@ -78,7 +78,7 @@ module Arxutils
       }
     end
 
-    def make_relation( data , count_classname_downcase , count_field )
+    def make_relation( data , count_classname_downcase )
       if data[:classname_downcase] != count_classname_downcase
         data[:flist].reduce( { content: [], need_count_class: nil } ){ |s, x|
           case x
@@ -87,7 +87,6 @@ module Arxutils
             data[:relation] = [] unless data[:relation]
           else
             data[:count_classname_downcase] = count_classname_downcase
-            data[:count_field] = count_field
             name_base = "relation_#{x}"
             s[:need_count_class_plural] ||= data[:plural]
           end
