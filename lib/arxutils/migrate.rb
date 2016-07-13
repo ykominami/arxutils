@@ -29,7 +29,6 @@ module Arxutils
       }
       if content_array.size > 0
         data_count = {count_classname: "Count" ,
-                      count_field: count_field,
                       need_count_class_plural: need_count_class_plural,
                      }
         ary = content_array.collect{|x| x[:content] }.flatten
