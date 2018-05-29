@@ -2,13 +2,30 @@
 
 module Arxutils
   class HierOp
-    def initialize( hier_symbol , base_klass , hier_klass , current_klass )
+    attr_reader :field_name, :hier_symbol, :base_klass, :hier_klass, :current_klass, :invalid_klass
+
+    def initialize( field_name, hier_symbol , hier_name, base_klass , hier_klass , current_klass , invalid_klass )
+      @field_name = field_name
       @hier_symbol = hier_symbol
       @base_klass = base_klass
       @hier_klass = hier_klass
       @current_klass = current_klass
+      @invalid_klass = invalid_klass
     end
-    
+
+    def get_category_hier_json( kind_num )
+      JSON( @hier_klass.pluck( :parent_id , :child_id , :level ).map{ |ary|
+              text = @base_klass.find( ary[1] ).__send__( @hier_symbol ).split("/").pop
+              if ary[2] == 0
+                parent_id = "#"
+              else
+                parent_id = %Q!#{ary[0]}!
+              end
+              child_id = %Q!#{ary[1]}!
+              { "id" => child_id , "parent" => parent_id , "text" => text }
+            } )
+    end
+
     def delete( hier )
       # 子として探す
       id = nil
