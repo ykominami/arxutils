@@ -16,16 +16,17 @@ module Arxutils
     class Dbinit
       attr_accessor :dbconfig_dest_path , :dbconfig_src_path , :dbconfig_src_fname , :dbconfig_dest_fname , :migrate_dir
       
-      def initialize( migrate_base_dir , src_config_dir , dbconfig , log_fname, forced = false )
-        @db_dir = dbconfig[:db_dir]
+      def initialize( db_dir , migrate_base_dir , src_config_dir , dbconfig , env, log_fname, forced = false )
+        @db_dir = db_dir
         @src_config_dir  = src_config_dir
-        @dest_config_dir  = dbconfig[:config_dir]
-        @dbconfig_dest_fname = "#{dbconfig[:kind]}.yaml"
-        @dbconfig_src_fname = "#{dbconfig[:kind]}.tmpl"
+        @dest_config_dir  = "config"
+        @dbconfig_dest_fname = "#{dbconfig}.yaml"
+        @dbconfig_src_fname = "#{dbconfig}.tmpl"
         @dbconfig_dest_path = File.join( @dest_config_dir , @dbconfig_dest_fname)
         @dbconfig_src_path = File.join(@src_config_dir  , @dbconfig_src_fname)
+        @env = env
         @log_fname = log_fname
-
+        
         if @db_dir and @log_fname
           @log_path = File.join( @db_dir , @log_fname )
           @migrate_dir = File.join( @db_dir , migrate_base_dir )
@@ -40,10 +41,8 @@ module Arxutils
       end
       
       def setup
-        puts ENV['ENV']
         dbconfig = YAML.load( File.read( @dbconfig_dest_path ) )
-        puts dbconfig[ ENV['ENV'] ]
-        ActiveRecord::Base.establish_connection(dbconfig[ENV['ENV']])
+        ActiveRecord::Base.establish_connection(dbconfig[@env])
         ActiveRecord::Base.logger = Logger.new( @log_path )
       end
     end
