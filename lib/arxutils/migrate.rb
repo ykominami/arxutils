@@ -10,11 +10,14 @@ module Arxutils
   class Migrate
     attr_accessor :dbinit , :dbconfig_dest_path , :dbconfig_dest_fname , :dbconfig_src_path , :dbconfig_src_fname
     
-    def Migrate.migrate( data_ary , relation_def_fpath , module_name, count_classname_downcase , dbconfig , forced )
+#    def Migrate.migrate( data_ary , relation_def_fpath , module_name, count_classname_downcase , dbconfig , forced )
+    def Migrate.migrate( db_dir , src_config_dir , log_fname, migrate_dir, env, data_ary , dbconfig , forced )
       src_config_dir = Arxutils.configdir
-      mig = Migrate.new( Dbutil::MIGRATE_DIR , src_config_dir , dbconfig, Dbutil::DATABASELOG, forced )
+      log_file_name = sprintf("%s-%s" , dbconfig.to_s , log_fname )
+      mig = Migrate.new( db_dir ,  migrate_dir , src_config_dir , dbconfig, env, log_file_name, forced )
       # dbconfigのテンプレートは内容が固定である。convertを呼び出し、Arxのインスタンスを作成するときに、適切なdata_aryの要素を与える必要がある（ただしテンプレートへの埋め込みには用いられない
-      mig.make_dbconfig( dbconfig )
+#      mig.make_dbconfig( data_ary )
+      data_ary.map{ |x| mig.make_dbconfig( x ) }
       
       data_ary.reduce(0) { |next_num , x| 
         mig.make( next_num , x )
@@ -36,6 +39,7 @@ module Arxutils
         ary.unshift( count_content )
         content_array = ary
       end
+=begin      
       File.open( relation_def_fpath , 'w' , {:encoding => Encoding::UTF_8}){ |f|
         f.puts("module #{module_name}")
         content_array.map{ |content|
@@ -44,14 +48,14 @@ module Arxutils
         }
         f.puts("end")
       }
-      
+=end      
       Dbutil::DbMgr.setup( mig.dbinit )
 
       mig.migrate
     end
     
-    def initialize( migrate_base_dir , config_dir , dbconfig, log_fname, forced = false )
-      @dbinit = Dbutil::Dbinit.new( migrate_base_dir , config_dir , dbconfig, log_fname, forced )
+    def initialize( db_dir , migrate_base_dir , src_config_dir , dbconfig, env, log_fname, forced )
+      @dbinit = Dbutil::Dbinit.new( db_dir , migrate_base_dir , src_config_dir , dbconfig, env, log_fname, forced )
       @dbconfig_dest_path = @dbinit.dbconfig_dest_path
       @dbconfig_src_path = @dbinit.dbconfig_src_path
       @dbconfig_src_fname = @dbinit.dbconfig_src_fname
