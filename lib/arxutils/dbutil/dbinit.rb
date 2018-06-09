@@ -2,7 +2,8 @@
 require 'fileutils'
 require 'yaml'
 require 'active_record'
-require 'sqlite3'
+#require 'sqlite3'
+require 'mysql2'
 
 module Arxutils
   module Dbutil
@@ -41,7 +42,16 @@ module Arxutils
       end
       
       def setup
+#        pp "@dbconfig_dest_path=#{@dbconfig_dest_path}"
+#        pp Dir.pwd
         dbconfig = YAML.load( File.read( @dbconfig_dest_path ) )
+        dbconfig[@env]["username"] = "enop"
+        dbconfig[@env]["password"] = "enop"
+        dbconfig[@env]["database"] = "enop" + dbconfig[@env]["database"]
+#        pp "@env="
+#        pp @env
+#        pp "dbconfig[@env]="
+#        pp dbconfig[@env]
         ActiveRecord::Base.establish_connection(dbconfig[@env])
         ActiveRecord::Base.logger = Logger.new( @log_path )
       end
