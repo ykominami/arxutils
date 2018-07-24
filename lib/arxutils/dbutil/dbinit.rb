@@ -1,4 +1,5 @@
 #! -*- encoding : UTF-8 -*-
+# coding: utf-8
 require 'fileutils'
 require 'yaml'
 require 'active_record'
@@ -17,10 +18,11 @@ module Arxutils
     class Dbinit
       attr_accessor :dbconfig_dest_path , :dbconfig_src_path , :dbconfig_src_fname , :dbconfig_dest_fname , :migrate_dir
       
-      def initialize( db_dir , migrate_base_dir , src_config_dir , dbconfig , env, log_fname, forced = false )
+      def initialize( db_dir , migrate_base_dir , src_config_dir , dbconfig , env, log_fname, opts )
         @db_dir = db_dir
         @src_config_dir  = src_config_dir
         @dest_config_dir  = "config"
+        # データベース構成ファイルをテンプレートから生成
         @dbconfig_dest_fname = "#{dbconfig}.yaml"
         @dbconfig_src_fname = "#{dbconfig}.tmpl"
         @dbconfig_dest_path = File.join( @dest_config_dir , @dbconfig_dest_fname)
@@ -35,7 +37,7 @@ module Arxutils
         FileUtils.mkdir_p( @db_dir ) if @db_dir
         FileUtils.mkdir_p( @migrate_dir ) if @migrate_dir
         FileUtils.mkdir_p( @dest_config_dir )
-        if forced
+        if opts["remigate"]
           FileUtils.rm( Dir.glob( File.join( @migrate_dir , "*"))) if @migrate_dir
           FileUtils.rm( Dir.glob( File.join( @dest_config_dir  , "*")))
         end
@@ -45,13 +47,6 @@ module Arxutils
 #        pp "@dbconfig_dest_path=#{@dbconfig_dest_path}"
 #        pp Dir.pwd
         dbconfig = YAML.load( File.read( @dbconfig_dest_path ) )
-        dbconfig[@env]["username"] = "enop"
-        dbconfig[@env]["password"] = "enop"
-        dbconfig[@env]["database"] = "enop" + dbconfig[@env]["database"]
-#        pp "@env="
-#        pp @env
-#        pp "dbconfig[@env]="
-#        pp dbconfig[@env]
         ActiveRecord::Base.establish_connection(dbconfig[@env])
         ActiveRecord::Base.logger = Logger.new( @log_path )
       end
