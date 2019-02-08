@@ -9,7 +9,7 @@ require 'pp'
 module Arxutils
   class Migrate
     attr_accessor :dbinit , :dbconfig_dest_path , :dbconfig_dest_fname , :dbconfig_src_path , :dbconfig_src_fname
-    
+    # クラスメソッドと、内部クラスで書き換え可能
     def Migrate.migrate( db_dir , src_config_dir , log_fname, migrate_dir, env, db_scheme_ary , dbconfig , opts )
       src_config_dir = Arxutils.configdir
       log_file_name = sprintf("%s-%s" , dbconfig.to_s , log_fname )
@@ -28,7 +28,7 @@ module Arxutils
       content_array = db_scheme_ary.map { |x| 
         mig.make_relation( x , "count" )
       }.select{ |x| x.size > 0 }
-      # TODO:  enumrateのamyメソッドで書き換え可能
+      # TODO:  enumrableのcollectとmspメソッドの組み合わせで書き換え可能
       need_count_class_plural = content_array.reduce([]){ |s,x|
         s << x[:need_count_class_plural] if x[:need_count_class_plural] != nil
         s
