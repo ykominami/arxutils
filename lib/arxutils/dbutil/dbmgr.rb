@@ -12,7 +12,7 @@ module Arxutils
         dbinit = Dbinit.new( db_dir, migrate_dir , config_dir , dbconfig, env , log_fname, opts )
         DbMgr.setup( dbinit )
       end
-      
+
       def DbMgr.setup( dbinit )
         @@ret ||= nil
         unless @@ret
@@ -28,6 +28,7 @@ module Arxutils
 
         @@ret
       end
+
       def DbMgr.conv_string(value , encoding)
         if value.class == String
           if value.encodingy != encoding
@@ -39,7 +40,7 @@ module Arxutils
           value
         end
       end
-      
+
       def DbMgr.conv_boolean( k , v )
         ret = v
         if k =~ /enable/
