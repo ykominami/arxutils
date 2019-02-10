@@ -11,7 +11,7 @@ module Arxutils
       # Dbinitクラスのインスタンス生成とDB接続、現在日時取得
       def self.init( db_dir , migrate_dir , config_dir , dbconfig, env , log_fname, opts )
         dbinit = Dbinit.new( db_dir, migrate_dir , config_dir , dbconfig, env , log_fname, opts )
-        DbMgr.setup( dbinit )
+        self.setup( dbinit )
       end
 
       # DB接続、現在日時取得
