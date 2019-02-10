@@ -1,19 +1,21 @@
 # -*- coding: utf-8 -*-
 
 require 'arxutils/dbutil/dbinit'
-
 require 'date'
 require 'pp'
 
 module Arxutils
   module Dbutil
+    # DB接続時に、現在日時も取得したい場合のユーティリティクラス
     class DbMgr
-      def DbMgr.init( db_dir , migrate_dir , config_dir , dbconfig, env , log_fname, opts )
+      # Dbinitクラスのインスタンス生成とDB接続、現在日時取得
+      def self.init( db_dir , migrate_dir , config_dir , dbconfig, env , log_fname, opts )
         dbinit = Dbinit.new( db_dir, migrate_dir , config_dir , dbconfig, env , log_fname, opts )
         DbMgr.setup( dbinit )
       end
 
-      def DbMgr.setup( dbinit )
+      # DB接続、現在日時取得
+      def self.setup( dbinit )
         @@ret ||= nil
         unless @@ret
           begin
@@ -28,44 +30,6 @@ module Arxutils
 
         @@ret
       end
-
-      def DbMgr.conv_string(value , encoding)
-        if value.class == String
-          if value.encodingy != encoding
-            value.encode(encoding)
-          else
-            value
-          end
-        else
-          value
-        end
-      end
-
-      def DbMgr.conv_boolean( k , v )
-        ret = v
-        if k =~ /enable/
-          if v.class == String
-            case v
-            when 'T'
-              ret = true
-            when 'F'
-              ret = false
-            else
-              raise
-            end
-          elsif v.class == TrueClass
-            # do nothin
-          elsif v.class == FalseClass
-            # do nothin
-          else
-            p v.class
-            p v
-            raise
-          end
-        end
-        ret
-      end
-    end
   end
 end
 
