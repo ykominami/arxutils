@@ -1,17 +1,22 @@
 # -*- coding: utf-8 -*-
 
 module Arxutils
+  # モジュールArxutils内でのユーティリティクラス
   class Arxutils
-    def Arxutils.dirname
-      File.dirname( __FILE__ )
-    end
-
-    def Arxutils.templatedir
+    # モジュールArxutils内のテンプレートファイル格納ディレクトリへのパスを返す
+    def self.templatedir
       File.join(  Arxutils.dirname , ".." , "template" )
     end
 
-    def Arxutils.configdir
+    # モジュールArxutils内の構成情報格納ディレクトリへのパスを返す
+    def self.configdir
       File.join( Arxutils.dirname  , ".." , 'config' )
+    end
+
+  private
+    # モジュールArxutils内のlib/arxutilsディレクトリへのパスを返す
+    def self.dirname
+      File.dirname( __FILE__ )
     end
   end
 end
