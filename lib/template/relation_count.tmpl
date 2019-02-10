@@ -1,4 +1,3 @@
   class <%= @data[:count_classname] %> < ActiveRecord::Base
 <% @data[:need_count_class_plural].each do |x| %>    has_many :invalid<%= x %>
 <% end %>  end
-  

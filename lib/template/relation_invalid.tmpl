@@ -1,4 +1,4 @@
   class Invalid<%= @data[:classname_downcase] %> < ActiveRecord::Base
     belongs_to :<%= @data[:classname_downcase] %> , foreign_key: 'org_id'
     belongs_to :<%= @data[:count_classname_downcase] %> , foreign_key: '<%= @data[:count_field] %>'
-  end  
+  end
