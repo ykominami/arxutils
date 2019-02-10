@@ -1,18 +1,38 @@
 # -*- coding: utf-8 -*-
 
 module Arxutils
+  # 階層処理
   class HierOp
-    attr_reader :field_name, :hier_symbol, :base_klass, :hier_klass, :current_klass, :invalid_klass
+    # 階層処理を付加したいフィールド名
+    attr_reader :field_name
+    # 階層処理を付加したいフィールド名のシンボル
+    attr_reader :hier_symbol
+    # 階層処理を付加したいフィールド名に対応するクラス名
+    attr_reader :base_klass
+    # 階層処理を行うクラス名
+    attr_reader :hier_klass
+    # 階層処理を付加したいフィールド名に対応するクラスのカレントに対応するクラス名
+    attr_reader :current_klass
+    # 階層処理を付加したいフィールド名に対応するクラスのインバリッドに対応するクラス名
+    attr_reader :invalid_klass
 
+    # 初期化
     def initialize( field_name, hier_symbol , hier_name, base_klass , hier_klass , current_klass , invalid_klass )
+      # 階層処理を付加したいフィールド名
       @field_name = field_name
+      # 階層処理を付加したいフィールド名のシンボル
       @hier_symbol = hier_symbol
+      # 階層処理を付加したいフィールド名に対応するクラス名
       @base_klass = base_klass
+      # 階層処理を行うクラス名
       @hier_klass = hier_klass
+      # 階層処理を付加したいフィールド名に対応するクラスのカレントに対応するクラス名
       @current_klass = current_klass
+      # 階層処理を付加したいフィールド名に対応するクラスのインバリッドに対応するクラス名
       @invalid_klass = invalid_klass
     end
 
+    # カテゴリの階層をJSON形式で取得
     def get_category_hier_json( kind_num )
       JSON( @hier_klass.pluck( :parent_id , :child_id , :level ).map{ |ary|
               text = @base_klass.find( ary[1] ).__send__( @hier_symbol ).split("/").pop
@@ -26,6 +46,7 @@ module Arxutils
             } )
     end
 
+    # 文字列で指定した階層を削除
     def delete( hier )
       # 子として探す
       id = nil
@@ -37,6 +58,7 @@ module Arxutils
       id
     end
 
+    # 文字列で指定した階層を移動
     def move( src_hier , dest_parent_hier )
       # dest_parent_hierがsrc_hierの子であれば(=src_hierがdest_parent_hierの先頭からの部分文字列である)何もせずエラーを返す
       escaped = Regexp.escape( src_hier )
@@ -46,12 +68,12 @@ module Arxutils
       if ret
         return false
       end
-      
+
       src_row_item = @base_klass.where( name: src_hier )
       src_num = src_row_item.id
       # srcが子である(tblでは項目を一意に指定できる)のtblでの項目を得る
       src_row = @hire_klass.find_by( child_id: src_num )
-      
+
       dest_parent_row_item = @base_klass.find_by( name: dest_parent_hier )
       unless dest_parent_row_item
         dest_parent_num = register( dest_parent_hier )
@@ -59,7 +81,7 @@ module Arxutils
         dest_parent_num = dest_parent_row_item.id
       end
       dest_parent_level = get_level_by_child( dest_parent_num )
-      
+
       # srcの親をdest_parentにする
       src_row.parent_id = dest_parent_num
 
@@ -73,6 +95,7 @@ module Arxutils
       true
     end
 
+    # 配列で指定した階層を親の階層として登録
     def register_parent( hier_ary , child_num , level )
       hier_ary.pop
       parent_hier_ary = hier_ary
@@ -81,7 +104,8 @@ module Arxutils
       hs = { parent_id: parent_num , child_id: child_num , level: level }
       @hier_klass.create( hs )
     end
-    
+
+    # 文字列で指定した階層を登録
     def register( hier )
       hier_ary = hier.split('/')
       level = get_level_by_array( hier_ary )
@@ -118,16 +142,17 @@ module Arxutils
       end
       new_num
     end
-    
+
     private
-    
+
+    # IDで指定した階層を削除
     def delete_at( num )
       # 子として探す
       row = @hier_klass.find_by( child_id: num )
       level = row.level
       parent_id = row.parent_id
       row_item = @base_klass.find( num )
-      
+
       parent_item_row = @base_klass.find( parent_id )
       parent_hier  = parent_item_row.name
 
@@ -148,12 +173,14 @@ module Arxutils
       }
     end
 
+    # 配列で指定した階層のレベルを得る
     def get_level_by_array( hier_ary )
       level = hier_ary.size - 1
       level = 0 if level < 0
       level
     end
 
+    # 階層を表すデータ構造から階層の名前を得る
     def get_name( items_row )
       name = ""
       if items_row
@@ -162,6 +189,7 @@ module Arxutils
       name
     end
 
+    # 階層を表すデータ構造で指定された階層の下部階層の名前を調整する
     def hier_adjust( item_row )
       parent_hier = item_row.name
       parent_num = item_row.id
@@ -176,7 +204,7 @@ module Arxutils
         }
       end
     end
-    
+
     # 指定項目と、その子のlevelを調整
     def level_adjust( row , parent_level )
       row.level = parent_level + 1
@@ -184,12 +212,14 @@ module Arxutils
       if child_rows.size > 0
         child_rows.map{ |x| level_adjust( x , row.level ) }
       end
-    end  
+    end
 
+    # IDで指定された階層のレベルを得る
     def get_level_by_child( num )
       @hier_klass.find_by( child_id: num ).level
     end
 
+    # 文字列で指定された親の階層の下の子の名前から、子の名前を作成
     def make_hier( parent_hier , name )
       [ parent_hier , name ].join('/')
     end
