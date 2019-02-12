@@ -30,6 +30,7 @@ module Arxutils
 
         @@ret
       end
+    end
   end
 end
 
