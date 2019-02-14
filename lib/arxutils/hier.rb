@@ -24,17 +24,17 @@ module Arxutils
     def initialize( field_name, hier_symbol , hier_name, base_klass , hier_klass , current_klass , invalid_klass )
       # 階層処理を付加したいフィールド名
       @field_name = field_name
-      # 階層処理を付加したいフィールド名のシンボル
+      # '/'が区切り文字の文字列で階層処理を実現するクラスの階層構造を表す文字列を持つメソッド／アトリビュートを表すシンボ
       @hier_symbol = hier_symbol
-      # 階層処理を付加したいフィールド名に対応するクラス名
+      # '/'が区切り文字の文字列で階層処理を実現するクラスのクラス名(DB中のテーブルに対応するActiveRecordの子クラス)
       @base_klass = base_klass
-      # 階層処理を行うクラス名(DB中のテーブルに対応するActiveRecordの子クラス)
+      # '/'が区切り文字の文字列で階層処理を実現するクラスのカレントに対応するクラス名(DB中のテーブルに対応するActiveRecordの子クラス)
+      @current_klass = current_klass
+      # '/'が区切り文字の文字列で階層処理を実現するクラスのインバリッドに対応するクラス名(DB中のテーブルに対応するActiveRecordの子クラス)
+      @invalid_klass = invalid_klass
+      # IDの親子関係で階層処理を実現するクラス名(DB中のテーブルに対応するActiveRecordの子クラス)
       #  print_id(integer), child_id(integer), level(integer)
       @hier_klass = hier_klass
-      # 階層処理を付加したいフィールド名に対応するクラスのカレントに対応するクラス名
-      @current_klass = current_klass
-      # 階層処理を付加したいフィールド名に対応するクラスのインバリッドに対応するクラス名
-      @invalid_klass = invalid_klass
     end
 
     # カテゴリの階層をJSON形式で取得引(引数は利用しない）
