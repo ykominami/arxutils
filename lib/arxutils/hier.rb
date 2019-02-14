@@ -41,13 +41,18 @@ module Arxutils
     def delete( hier )
       # 子として探す
       id = nil
-      row_item  = @base_klass.find_by( { @hier_symbol => hier } )
-      if row_item
-        id = row_item.id
-        delete_at( id )
-        @base_klass.delete_at( id )
+      base  = @base_klass.find_by( { @hier_symbol => hier } )
+      if base
+        delete_at( base.org_id )
+        @base_klass.delete_at( base.id )
       end
       id
+    end
+
+    def delete_by_id( id )
+      base = @base_klass.find_by( org_id: id )
+      delete_at( id )
+      @base_klass.delete_at( base.id )
     end
 
     # 文字列で指定した階層を移動
@@ -140,30 +145,30 @@ module Arxutils
     # IDで指定した階層を削除
     def delete_at( num )
       # 子として探す
-      row = @hier_klass.find_by( child_id: num )
-      level = row.level
-      parent_id = row.parent_id
-      row_item = @base_klass.find( num )
+      hier = @hier_klass.find_by( child_id: num )
+      level = hier.level
+      parent_id = hier.parent_id
+      base = @base_klass.find_by( ord_id: num )
 
-      parent_item_row = @base_klass.find( parent_id )
-      parent_hier  = parent_item_row.name
+      parent_base = @base_klass.find_by( ord_id: parent_id )
+      parent_hier_string  = parent_base.__send__ @hier_symbol
 
       # 属する子を探す
-      child_rows = @hier_klass.where( parent_id: num )
+      children_hier = @hier_klass.where( parent_id: num )
       # 属する子の階層レベルを調整する(削除するのでlevel - 1になる)
-      child_rows.map{ |x| level_adjust( x , level - 1 ) }
+      children_hier.map{ |x| level_adjust( x , level - 1 ) }
       # 属する子の親を、親の親にする
-      child_rows.map{ |x|
+      children_hier.map{ |x|
         x.parent_id = parent_id
         x.save
       }
       # 属する子のhierを調整する
-      child_rows.map{ |x|
-        child_item_row = @base_klass.find( x.child_id )
-        name = get_name( child_item_row )
-        child_item_row.name = make_hier( parent_hier , name )
-        child_item_row.save
-        hier_adjust( child_item_row )
+      children_hier.map{ |x|
+        child_base = @base_klass.find_by( org_id: x.child_id )
+        name = get_name( child_base )
+        child_base.hier = make_hier( parent_hier , name )
+        child_base.save
+        hier_adjust( child_base )
       }
     end
 
@@ -184,16 +189,16 @@ module Arxutils
     end
 
     # 階層を表すデータ構造で指定された階層の下部階層の名前を調整する
-    def hier_adjust( item_row )
-      parent_hier = item_row.name
-      parent_num = item_row.id
+    def hier_adjust( base )
+      parent_hier_string = base.__send__ @hier_symbol
+      parent_num = base.org_id
 
       tbl_rows = @hier_klass.where( parent_id: parent_num )
       if tbl_rows.size > 0
         tbl_rows.map{|x|
           child_num = x.child_id
-          item_row = @base_klass.find( child_num )
-          item_row.name =  make_hier( parent_hier , get_name( item_row ) )
+          item_row = @base_klass.find_by( org_id: child_num )
+          item_row.hier =  make_hier( parent_hier_string , get_name( item_row ) )
           item_row.save
           hier_adjust( item_row )
         }
