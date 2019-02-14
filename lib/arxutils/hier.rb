@@ -5,20 +5,20 @@ module Arxutils
   class HierOp
     # 階層処理を付加したいフィールド名(未使用か？)
     attr_reader :field_name
-    # 階層処理を付加したいフィールド名のシンボル
+    # '/'が区切り文字の文字列で階層処理を実現するクラスの階層構造を表す文字列を持つメソッド／アトリビュートを表すシンボル
     attr_reader :hier_symbol
-    # 階層処理を付加したいフィールド名に対応するクラス名(DB中のテーブルに対応するActiveRecordの子クラス)
-    #  hier_symbolというsymbolで指定できるメソッド／アトリビュート(string)を持つ。"'/'を区切り文字として持つ階層を表す文字列
-    #  nameというメソッド／アトリビュート(string)を持つ。"'/'を区切り文字として持つ階層を表す文字列
+    # '/'が区切り文字の文字列で階層処理を実現するクラスのクラス名(DB中のテーブルに対応するActiveRecordの子クラス)
+    # シンボルhier_symbolで指定できるメソッド／アトリビュート(string)を持つ。
+    # nameというメソッド／アトリビュート(string)を持つ。"'/'を区切り文字として持つ階層を表す文字列
     # registerメソッドを呼び出す時は、hier_symbolのみを指定してcreate出来なければならない（そうでなければSQLの制約違反発生）
     attr_reader :base_klass
-    # 階層処理を行うクラス名
-    attr_reader :hier_klass
-    # 階層処理を付加したいフィールド名に対応するクラスのカレントに対応するクラス名(DB中のテーブルに対応するActiveRecordの子クラス)
-    #  parent_id(integer) , child_id(integer) , leve(integer)というメソッド／アトリビュートを持つ
+    # '/'が区切り文字の文字列で階層処理を実現するクラスのカレントに対応するクラス名(DB中のテーブルに対応するActiveRecordの子クラス)
     attr_reader :current_klass
-    # 階層処理を付加したいフィールド名に対応するクラスのインバリッドに対応するクラス名
+    # '/'が区切り文字の文字列で階層処理を実現するクラスのインバリッドに対応するクラス名(DB中のテーブルに対応するActiveRecordの子クラス)
     attr_reader :invalid_klass
+    # IDの親子関係で階層処理を実現するクラス名(DB中のテーブルに対応するActiveRecordの子クラス)
+    # parent_id(integer) , child_id(integer) , leve(integer)というメソッド／アトリビュートを持つ
+    attr_reader :hier_klass
 
     # 初期化
     def initialize( field_name, hier_symbol , hier_name, base_klass , hier_klass , current_klass , invalid_klass )
