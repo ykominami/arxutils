@@ -62,6 +62,7 @@ module Arxutils
       if row_item
         id = row_item.id
         delete_at( id )
+        @base_klass.delete_at( id )
       end
       id
     end
