@@ -3,15 +3,19 @@
 module Arxutils
   # 階層処理
   class HierOp
-    # 階層処理を付加したいフィールド名
+    # 階層処理を付加したいフィールド名(未使用か？)
     attr_reader :field_name
     # 階層処理を付加したいフィールド名のシンボル
     attr_reader :hier_symbol
-    # 階層処理を付加したいフィールド名に対応するクラス名
+    # 階層処理を付加したいフィールド名に対応するクラス名(DB中のテーブルに対応するActiveRecordの子クラス)
+    #  hier_symbolというsymbolで指定できるメソッド／アトリビュート(string)を持つ。"'/'を区切り文字として持つ階層を表す文字列
+    #  nameというメソッド／アトリビュート(string)を持つ。"'/'を区切り文字として持つ階層を表す文字列
+    # registerメソッドを呼び出す時は、hier_symbolのみを指定してcreate出来なければならない（そうでなければSQLの制約違反発生）
     attr_reader :base_klass
     # 階層処理を行うクラス名
     attr_reader :hier_klass
-    # 階層処理を付加したいフィールド名に対応するクラスのカレントに対応するクラス名
+    # 階層処理を付加したいフィールド名に対応するクラスのカレントに対応するクラス名(DB中のテーブルに対応するActiveRecordの子クラス)
+    #  parent_id(integer) , child_id(integer) , leve(integer)というメソッド／アトリビュートを持つ
     attr_reader :current_klass
     # 階層処理を付加したいフィールド名に対応するクラスのインバリッドに対応するクラス名
     attr_reader :invalid_klass
@@ -24,7 +28,8 @@ module Arxutils
       @hier_symbol = hier_symbol
       # 階層処理を付加したいフィールド名に対応するクラス名
       @base_klass = base_klass
-      # 階層処理を行うクラス名
+      # 階層処理を行うクラス名(DB中のテーブルに対応するActiveRecordの子クラス)
+      #  print_id(integer), child_id(integer), level(integer)
       @hier_klass = hier_klass
       # 階層処理を付加したいフィールド名に対応するクラスのカレントに対応するクラス名
       @current_klass = current_klass
@@ -32,12 +37,15 @@ module Arxutils
       @invalid_klass = invalid_klass
     end
 
-    # カテゴリの階層をJSON形式で取得
+    # カテゴリの階層をJSON形式で取得引(引数は利用しない）
     def get_category_hier_json( kind_num )
       JSON( @hier_klass.pluck( :parent_id , :child_id , :level ).map{ |ary|
+              # 
               text = @base_klass.find( ary[1] ).__send__( @hier_symbol ).split("/").pop
+              # トップレベルの場合のparent_idは#のみ
               if ary[2] == 0
                 parent_id = "#"
+              # トップレベル以外の場合のparent_idの#数字
               else
                 parent_id = %Q!#{ary[0]}!
               end
@@ -46,7 +54,7 @@ module Arxutils
             } )
     end
 
-    # 文字列で指定した階層を削除
+    # 指定した階層(階層を/で区切って表現)のアイテムをbase_klassから削除
     def delete( hier )
       # 子として探す
       id = nil
@@ -71,7 +79,7 @@ module Arxutils
 
       src_row_item = @base_klass.where( name: src_hier )
       src_num = src_row_item.id
-      # srcが子である(tblでは項目を一意に指定できる)のtblでの項目を得る
+      # srcが子である(tblでは項目を一意に指定できる)tblでの項目を得る
       src_row = @hire_klass.find_by( child_id: src_num )
 
       dest_parent_row_item = @base_klass.find_by( name: dest_parent_hier )
@@ -84,18 +92,19 @@ module Arxutils
 
       # srcの親をdest_parentにする
       src_row.parent_id = dest_parent_num
-
+      src_row.save
       # destに移動後のsrcの子のレベルを調整する
       level_adjust( src_row , dest_parent_level )
       # destに移動後のsrcのhierを再設定
       set_hier( src_row_item ,  make_hier( dest_parent_row_item.name , get_name( src_row_item ) ) )
+      src_row_item.save
       # destに移動後のsrcの子のhierを調整する
       hier_adjust( src_row_item )
 
       true
     end
 
-    # 配列で指定した階層を親の階層として登録
+    # 配列で指定した階層を親の階層としてhier_klassに登録
     def register_parent( hier_ary , child_num , level )
       hier_ary.pop
       parent_hier_ary = hier_ary
@@ -105,13 +114,12 @@ module Arxutils
       @hier_klass.create( hs )
     end
 
-    # 文字列で指定した階層を登録
+    # 文字列で指定した階層(/を区切り文字として持つ)をhier_klassに登録
     def register( hier )
       hier_ary = hier.split('/')
       level = get_level_by_array( hier_ary )
 
       # もしhier_aryがnilだけを1個持つ配列、または空文字列だけを1個もつ配列であれば、hier_nameは空文字列になる
-
       item_row = @current_klass.find_by( {@hier_symbol => hier} )
       unless item_row
         # @base_klassがhierだけでcreateできる場合は（他にフィールドがnot_nullでないか）、ここに来てもよい。
@@ -163,12 +171,14 @@ module Arxutils
       # 属する子の親を、親の親にする
       child_rows.map{ |x|
         x.parent_id = parent_id
+        x.save
       }
       # 属する子のhierを調整する
       child_rows.map{ |x|
         child_item_row = @base_klass.find( x.child_id )
         name = get_name( child_item_row )
         child_item_row.name = make_hier( parent_hier , name )
+        child_item_row.save
         hier_adjust( child_item_row )
       }
     end
@@ -200,6 +210,7 @@ module Arxutils
           child_num = x.child_id
           item_row = @base_klass.find( child_num )
           item_row.name =  make_hier( parent_hier , get_name( item_row ) )
+          item_row.save
           hier_adjust( item_row )
         }
       end
@@ -208,6 +219,7 @@ module Arxutils
     # 指定項目と、その子のlevelを調整
     def level_adjust( row , parent_level )
       row.level = parent_level + 1
+      row.save
       child_rows = @hier_klass.where( parent_id: row.id )
       if child_rows.size > 0
         child_rows.map{ |x| level_adjust( x , row.level ) }
