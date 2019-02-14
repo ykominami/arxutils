@@ -4,7 +4,7 @@ module Arxutils
     # 対象ID群
     attr_reader :ids
     # 状態
-    attr_reader :state
+    attr_accessor :state
 
     #初期化
     def initialize
