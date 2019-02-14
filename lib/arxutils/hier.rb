@@ -37,23 +37,6 @@ module Arxutils
       @hier_klass = hier_klass
     end
 
-    # カテゴリの階層をJSON形式で取得引(引数は利用しない）
-    def get_category_hier_json( kind_num )
-      JSON( @hier_klass.pluck( :parent_id , :child_id , :level ).map{ |ary|
-              # 
-              text = @base_klass.find( ary[1] ).__send__( @hier_symbol ).split("/").pop
-              # トップレベルの場合のparent_idは#のみ
-              if ary[2] == 0
-                parent_id = "#"
-              # トップレベル以外の場合のparent_idの#数字
-              else
-                parent_id = %Q!#{ary[0]}!
-              end
-              child_id = %Q!#{ary[1]}!
-              { "id" => child_id , "parent" => parent_id , "text" => text }
-            } )
-    end
-
     # 指定した階層(階層を/で区切って表現)のアイテムをbase_klassから削除
     def delete( hier )
       # 子として探す
