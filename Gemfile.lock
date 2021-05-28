@@ -32,7 +32,7 @@ GEM
       concurrent-ruby (~> 1.0)
     minitest (5.14.4)
     mysql2 (0.4.10-x64-mingw32)
-    rake (10.5.0)
+    rake (13.0.3)
     rspec (3.10.0)
       rspec-core (~> 3.10.0)
       rspec-expectations (~> 3.10.0)
@@ -57,7 +57,7 @@ PLATFORMS
 DEPENDENCIES
   arxutils!
   bundler (~> 2.2.10)
-  rake (~> 10.0)
+  rake (>= 12.3.3)
   rspec
 
 BUNDLED WITH
