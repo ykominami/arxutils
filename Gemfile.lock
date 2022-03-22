@@ -5,7 +5,6 @@ PATH
       activerecord (~> 4.2)
       activesupport
       encx
-      mysql2 (~> 0.4.1)
       sqlite3
 
 GEM
@@ -31,7 +30,6 @@ GEM
     i18n (0.9.5)
       concurrent-ruby (~> 1.0)
     minitest (5.14.4)
-    mysql2 (0.4.10-x64-mingw32)
     rake (13.0.3)
     rspec (3.10.0)
       rspec-core (~> 3.10.0)
@@ -53,6 +51,7 @@ GEM
 
 PLATFORMS
   x64-mingw32
+  x86_64-linux
 
 DEPENDENCIES
   arxutils!
@@ -61,4 +60,4 @@ DEPENDENCIES
   rspec
 
 BUNDLED WITH
-   2.2.16
+   2.2.27

@@ -3,8 +3,17 @@
 require 'fileutils'
 require 'yaml'
 require 'active_record'
-#require 'sqlite3'
-require 'mysql2'
+begin
+	require 'sqlite3'
+rescue
+
+end
+
+begin
+	require 'mysql2'
+rescue
+
+end
 
 module Arxutils
   # DB操作用ユーティリティクラス
