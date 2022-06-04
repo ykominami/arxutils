@@ -27,14 +27,18 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_runtime_dependency "activesupport"
+#  spec.add_runtime_dependency "activesupport"
 #  spec.add_runtime_dependency "erb"
-  spec.add_runtime_dependency "activerecord" , "~> 4.2"
-  spec.add_runtime_dependency "sqlite3"
+# spec.add_runtime_dependency "activerecord" , "~> 7.0.2.3"
+  spec.add_runtime_dependency "activerecord" , "< 7.0"
+  #spec.add_runtime_dependency "sqlite3"
   #spec.add_runtime_dependency "mysql2" , "~> 0.4.1"
   spec.add_runtime_dependency "encx"
 
-  spec.add_development_dependency "bundler", "~> 2.2.10"
-  spec.add_development_dependency "rake", ">= 12.3.3"
+  # spec.add_development_dependency "bundler", "~> 2.3.7"
+  # spec.add_development_dependency "rake", ">= 12.3.3"
+  spec.add_development_dependency "bundler"
+  spec.add_development_dependency "rake"
   spec.add_development_dependency "rspec"
+  spec.add_development_dependency "rubocop"
 end

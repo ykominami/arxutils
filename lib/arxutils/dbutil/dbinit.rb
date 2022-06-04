@@ -3,16 +3,19 @@
 require 'fileutils'
 require 'yaml'
 require 'active_record'
+
 begin
-	require 'sqlite3'
+  require 'sqlite3'
 rescue
 
 end
 
 begin
-	require 'mysql2'
-rescue
-
+  require 'mysql2'
+rescue StandardError => ex
+  #p 1
+rescue Exception => ex
+  #p 2
 end
 
 module Arxutils

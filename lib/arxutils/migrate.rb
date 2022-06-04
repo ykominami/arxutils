@@ -139,7 +139,7 @@ module Arxutils
             additional = kind
           end
           fname = File.join( @migrate_dir , sprintf("%03d_create_%s%s.rb" , idy , additional , classname_downcase) )
-          File.open( fname , 'w' , {:encoding => Encoding::UTF_8}){ |f|
+          File.open( fname , 'w' , **{:encoding => Encoding::UTF_8}){ |f|
             f.puts( content )
           }
       end
