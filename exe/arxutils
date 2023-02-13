@@ -1,3 +1,47 @@
 #!/usr/bin/env ruby
 
-require "arxutils"
+require 'arxutils'
+require 'simpleoptparse'
+require 'pstore'
+
+env = ENV['ENV']
+#env ||= "development"
+env ||= "production"
+
+opts = { db_dir: Arxutils::Dbutil::DB_DIR }
+banner = "Usage: bundle exec ruby exe/enopjson json_fname"
+
+if ARGV.size > 1
+  token = ARGV.shift
+  url = ARGV.shift
+else
+  puts banner
+  exit 10
+end
+
+Simpleoptparse::Simpleoptparse.parse( ARGV , opts , banner , Enop::VERSION , nil ){ |parser|
+    parser.on('--mysql'  ) { |x| opts["dbconfig"] = Arxutils::Dbutil::DBCONFIG_MYSQL }
+    parser.on('--sqlite3'  ) { |x| opts["dbconfig"] = Arxutils::Dbutil::DBCONFIG_SQLITE3 }
+}
+
+opts["dbconfig"] = Arxutils::Dbutil::DBCONFIG_SQLITE3 unless opts["dbconfig"]
+
+hs = {
+  "db_dir" => Arxutils::Dbutil::DB_DIR,
+  "migrate_dir" => Arxutils::Dbutil::MIGRATE_DIR,
+  "config_dir" => Arxutils::Dbutil::CONFIG_DIR,
+  "dbconfig" => opts["dbconfig"],
+  "env" => env,
+  "log_fname" => Arxutils::Dbutil::DATABASELOG,
+  :csv_fname => "x.csv",
+  "output_dir" => "output"
+}
+
+
+enop = Enop::Enop.new(
+                      token,
+                      hs,
+                      opts,
+                      url,
+                      )
+enop.connect
